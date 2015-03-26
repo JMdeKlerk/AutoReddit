@@ -1,31 +1,73 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RedditBot
 {
     class User
     {
-        public User()
-        {
+        private string username, password, key, secret, access_token;
+        private DateTime token_expires;
 
+        public User(string name, string pass, string key, string secret)
+        {
+            this.username = name;
+            this.password = pass;
+            this.key = key;
+            this.secret = secret;
+
+            var login = loginUser(name, pass, key, secret);
+            string value;
+            if (login.TryGetValue("access_token", out value)) { this.access_token = value; }
+            if (login.TryGetValue("expires_in", out value)) { this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(value)); }
         }
 
-        public void loginUser(string name, string pass, string key, string secret) 
+        public Dictionary<string, string> loginUser(string name, string pass, string key, string secret)
         {
+            string url = "https://www.reddit.com/api/v1/access_token";
+            string postData = "username=" + name + "&password=" + pass + "&grant_type=password";
+            ASCIIEncoding encode = new ASCIIEncoding();
+            byte[] byteData = encode.GetBytes(postData);
 
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteData.Length;
+
+            string auth = key + ":" + secret;
+            byte[] authBin = System.Text.Encoding.UTF8.GetBytes(auth);
+            auth = Convert.ToBase64String(authBin);
+            auth = "Basic " + auth;
+            request.Headers.Add("AUTHORIZATION", auth);
+
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteData, 0, byteData.Length);
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            StreamReader read = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(read.ReadToEnd());
+            return values;
         }
 
         public string getToken()
         {
-            return "";
+            return this.access_token;
         }
 
         public string getUsername()
         {
-            return "";
+            return this.username;
+        }
+
+        private bool tokenHasExpired()
+        {
+            if (DateTime.Now > this.token_expires) { return true; } return false;
         }
     }
 }
