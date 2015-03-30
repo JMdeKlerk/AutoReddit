@@ -2,11 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace RedditBot
 {
@@ -30,7 +27,7 @@ namespace RedditBot
 
             if (!this.access_token.Equals(""))
             {
-                parent.formConsole("Logged in. Access token expires at " + this.token_expires.ToString("hh:mm:ss tt, dd MMMM yyyy"));
+                parent.formConsole("Logged in successfully.");
             }
             else
             {
