@@ -32,11 +32,13 @@ namespace RedditBot
             Properties.Settings.Default["appsecret"] = secretTextBox.Text;
             if (remember.Checked) { Properties.Settings.Default.Save(); }
             parent.username.Text = userTextBox.Text;
+            parent.formConsole("Account settings sucessfully updated.");
             this.Close();
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            parent.formConsole("Account settings not saved.");
             this.Close();
         }
     }

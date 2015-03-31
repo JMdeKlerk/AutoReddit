@@ -35,9 +35,9 @@
             this.scanWorker = new System.ComponentModel.BackgroundWorker();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.triggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.responseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -74,7 +74,6 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.outputBox.BackColor = System.Drawing.SystemColors.Control;
             this.outputBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.outputBox.DetectUrls = false;
             this.outputBox.Font = new System.Drawing.Font("Consolas", 8F);
             this.outputBox.ForeColor = System.Drawing.SystemColors.InfoText;
             this.outputBox.Location = new System.Drawing.Point(6, 15);
@@ -82,7 +81,8 @@
             this.outputBox.ReadOnly = true;
             this.outputBox.Size = new System.Drawing.Size(498, 179);
             this.outputBox.TabIndex = 6;
-            this.outputBox.Text = "";
+            this.outputBox.Text = "Welcome to RedditBot v0.1! Set up your account, trigger and response to begin.";
+            this.outputBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.outputBox_LinkClicked);
             // 
             // groupBox4
             // 
@@ -105,9 +105,9 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.accountToolStripMenuItem,
-            this.aboutToolStripMenuItem,
+            this.triggerToolStripMenuItem,
             this.responseToolStripMenuItem,
-            this.aboutToolStripMenuItem1});
+            this.aboutToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(730, 24);
@@ -121,11 +121,12 @@
             this.accountToolStripMenuItem.Text = "Account";
             this.accountToolStripMenuItem.Click += new System.EventHandler(this.accountToolStripMenuItem_Click);
             // 
-            // aboutToolStripMenuItem
+            // triggerToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
-            this.aboutToolStripMenuItem.Text = "Trigger";
+            this.triggerToolStripMenuItem.Name = "triggerToolStripMenuItem";
+            this.triggerToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.triggerToolStripMenuItem.Text = "Trigger";
+            this.triggerToolStripMenuItem.Click += new System.EventHandler(this.triggerToolStripMenuItem_Click);
             // 
             // responseToolStripMenuItem
             // 
@@ -133,11 +134,11 @@
             this.responseToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.responseToolStripMenuItem.Text = "Response";
             // 
-            // aboutToolStripMenuItem1
+            // aboutToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(52, 20);
-            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // groupBox1
             // 
@@ -279,8 +280,9 @@
             this.run.Name = "run";
             this.run.Size = new System.Drawing.Size(87, 23);
             this.run.TabIndex = 1;
-            this.run.Text = "Start";
+            this.run.Text = "Run";
             this.run.UseVisualStyleBackColor = true;
+            this.run.Click += new System.EventHandler(this.run_Click);
             // 
             // Main
             // 
@@ -316,9 +318,9 @@
         private System.ComponentModel.BackgroundWorker scanWorker;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem triggerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem responseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button run;
         private System.Windows.Forms.Label label6;

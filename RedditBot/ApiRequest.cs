@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -10,7 +8,20 @@ namespace RedditBot
 {
     class ApiRequest
     {
-        private Dictionary<string, string> jsonResponse;
+        private dynamic result;
+
+        public ApiRequest(string url, string httpMethod)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = httpMethod;
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.UserAgent = "RedditBot/0.1 by /u/Shindogo";
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            StreamReader read = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            string json = read.ReadToEnd();
+            result = JObject.Parse(json);
+        }
 
         public ApiRequest(User user, string url, string httpMethod)
         {
@@ -25,7 +36,8 @@ namespace RedditBot
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             StreamReader read = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(read.ReadToEnd());
+            string json = read.ReadToEnd();
+            result = JObject.Parse(json);
         }
 
         public ApiRequest(User user, string url, string httpMethod, Hashtable args)
@@ -52,12 +64,13 @@ namespace RedditBot
             dataStream.Write(byteData, 0, byteData.Length);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             StreamReader read = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-            Console.WriteLine(read.ReadToEnd());
+            string json = read.ReadToEnd();
+            result = JObject.Parse(json);
         }
 
-        public Dictionary<string, string> getResponse()
+        public dynamic getResponse()
         {
-            return this.jsonResponse;
+            return this.result;
         }
     }
 }

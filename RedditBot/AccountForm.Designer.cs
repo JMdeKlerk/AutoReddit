@@ -155,6 +155,7 @@
             this.Controls.Add(this.secretTextBox);
             this.Controls.Add(this.userTextBox);
             this.Controls.Add(this.confirmButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "AccountForm";
             this.Text = "Account Settings";
             this.ResumeLayout(false);
