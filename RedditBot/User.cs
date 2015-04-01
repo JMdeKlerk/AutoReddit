@@ -32,7 +32,7 @@ namespace RedditBot
             else
             {
                 if (error.Equals("invalid_grant")) { error = "Username or password incorrect."; }
-                else if (error.Equals("invalid_auth")) { error = "Server authorization failed. The server may be down or your app key/secret may be invalid."; }
+                else if (error.Equals("invalid_auth")) { error = "Authorization failed. The server may be down or your app key/secret may be invalid."; }
                 else { error = "Unkown error type: " + error; }
                 parent.formConsole("Error: " + error);
             }

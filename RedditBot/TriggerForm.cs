@@ -20,7 +20,6 @@ namespace RedditBot
             this.parent = parent;
             searchTextBox.Text = Properties.Settings.Default["trigger"].ToString();
             subredditTextBox.Text = Properties.Settings.Default["subreddit"].ToString();
-            titleSearch.Checked = (bool)Properties.Settings.Default["searchTitles"];
             postSearch.Checked = (bool)Properties.Settings.Default["searchPosts"];
             commentSearch.Checked = (bool)Properties.Settings.Default["searchComments"];
         }
@@ -29,7 +28,6 @@ namespace RedditBot
         {
             Properties.Settings.Default["trigger"] = searchTextBox.Text;
             Properties.Settings.Default["subreddit"] = subredditTextBox.Text;
-            Properties.Settings.Default["searchTitles"] = titleSearch.Checked;
             Properties.Settings.Default["searchPosts"] = postSearch.Checked;
             Properties.Settings.Default["searchComments"] = commentSearch.Checked;
             if (remember.Checked) { Properties.Settings.Default.Save(); }

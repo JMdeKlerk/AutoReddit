@@ -81,7 +81,7 @@
             this.outputBox.ReadOnly = true;
             this.outputBox.Size = new System.Drawing.Size(498, 179);
             this.outputBox.TabIndex = 6;
-            this.outputBox.Text = "Welcome to RedditBot v0.1! Set up your account, trigger and response to begin.";
+            this.outputBox.Text = "";
             this.outputBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.outputBox_LinkClicked);
             // 
             // groupBox4

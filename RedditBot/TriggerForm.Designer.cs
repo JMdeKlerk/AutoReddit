@@ -34,7 +34,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.postSearch = new System.Windows.Forms.CheckBox();
-            this.titleSearch = new System.Windows.Forms.CheckBox();
             this.commentSearch = new System.Windows.Forms.CheckBox();
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -44,14 +43,14 @@
             // 
             // searchTextBox
             // 
-            this.searchTextBox.Location = new System.Drawing.Point(81, 12);
+            this.searchTextBox.Location = new System.Drawing.Point(81, 35);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(191, 20);
             this.searchTextBox.TabIndex = 0;
             // 
             // subredditTextBox
             // 
-            this.subredditTextBox.Location = new System.Drawing.Point(81, 66);
+            this.subredditTextBox.Location = new System.Drawing.Point(81, 62);
             this.subredditTextBox.Name = "subredditTextBox";
             this.subredditTextBox.Size = new System.Drawing.Size(191, 20);
             this.subredditTextBox.TabIndex = 1;
@@ -59,7 +58,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(12, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 5;
@@ -68,16 +67,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 43);
+            this.label2.Location = new System.Drawing.Point(12, 13);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Found in:";
+            this.label2.Text = "Search in:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 69);
+            this.label3.Location = new System.Drawing.Point(12, 65);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 7;
@@ -86,27 +85,17 @@
             // postSearch
             // 
             this.postSearch.AutoSize = true;
-            this.postSearch.Location = new System.Drawing.Point(139, 42);
+            this.postSearch.Location = new System.Drawing.Point(81, 12);
             this.postSearch.Name = "postSearch";
             this.postSearch.Size = new System.Drawing.Size(52, 17);
             this.postSearch.TabIndex = 9;
             this.postSearch.Text = "Posts";
             this.postSearch.UseVisualStyleBackColor = true;
             // 
-            // titleSearch
-            // 
-            this.titleSearch.AutoSize = true;
-            this.titleSearch.Location = new System.Drawing.Point(82, 42);
-            this.titleSearch.Name = "titleSearch";
-            this.titleSearch.Size = new System.Drawing.Size(51, 17);
-            this.titleSearch.TabIndex = 10;
-            this.titleSearch.Text = "Titles";
-            this.titleSearch.UseVisualStyleBackColor = true;
-            // 
             // commentSearch
             // 
             this.commentSearch.AutoSize = true;
-            this.commentSearch.Location = new System.Drawing.Point(197, 42);
+            this.commentSearch.Location = new System.Drawing.Point(139, 12);
             this.commentSearch.Name = "commentSearch";
             this.commentSearch.Size = new System.Drawing.Size(75, 17);
             this.commentSearch.TabIndex = 11;
@@ -147,7 +136,7 @@
             // 
             // advanced
             // 
-            this.advanced.Location = new System.Drawing.Point(15, 92);
+            this.advanced.Location = new System.Drawing.Point(15, 93);
             this.advanced.Name = "advanced";
             this.advanced.Size = new System.Drawing.Size(257, 23);
             this.advanced.TabIndex = 15;
@@ -165,7 +154,6 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.commentSearch);
-            this.Controls.Add(this.titleSearch);
             this.Controls.Add(this.postSearch);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -188,7 +176,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox postSearch;
-        private System.Windows.Forms.CheckBox titleSearch;
         private System.Windows.Forms.CheckBox commentSearch;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
