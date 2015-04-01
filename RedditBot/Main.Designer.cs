@@ -82,7 +82,6 @@
             this.outputBox.Size = new System.Drawing.Size(498, 179);
             this.outputBox.TabIndex = 6;
             this.outputBox.Text = "";
-            this.outputBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.outputBox_LinkClicked);
             // 
             // groupBox4
             // 

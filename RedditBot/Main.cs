@@ -15,31 +15,34 @@ namespace RedditBot
         public Main()
         {
             InitializeComponent();
-            username.Text = Properties.Settings.Default["username"].ToString();
         }
 
         private void login_Click(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default["username"].ToString().Equals("")) { formConsole("Login failed: You must set up your account first."); }
-            else
+            if (!connected)
             {
                 formConsole("Logging in as user " + Properties.Settings.Default["username"].ToString() + "...");
                 loginWorker.RunWorkerAsync();
+            }
+
+            if (connected)
+            {
+                formConsole("Logging out.");
+                connected = false;
+                user = null;
+                formUpdate();
             }
         }
 
         private void run_Click(object sender, EventArgs e)
         {
             if (!connected) { formConsole("Run failed: You must log in first. "); }
-            else if (Properties.Settings.Default["trigger"].ToString().Equals("")) { formConsole("Run failed: Set your trigger and response."); }
             else
             {
-                started = true;
                 formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString());
-                run.Text = "Stop";
-                running.Text = "Yes";
                 started = true;
                 scanWorker.RunWorkerAsync();
+                formUpdate();
             }
         }
 
@@ -59,78 +62,22 @@ namespace RedditBot
         {
             user = new User(Properties.Settings.Default["username"].ToString(), Properties.Settings.Default["password"].ToString(),
                 Properties.Settings.Default["appkey"].ToString(), Properties.Settings.Default["appsecret"].ToString(), this);
-            if (!user.getToken().Equals(""))
-            {
-                connected = true;
-                login.Invoke((MethodInvoker)delegate { login.Text = "Logout"; });
-                username.Invoke((MethodInvoker)delegate { username.Text = user.getUsername(); });
-                loggedin.Invoke((MethodInvoker)delegate { loggedin.Text = "Yes"; });
-                ApiRequest request = new ApiRequest(user, "https://oauth.reddit.com/api/v1/me", "GET");
-                dynamic userinfo = request.getResponse();
-                lkarma.Invoke((MethodInvoker)delegate { lkarma.Text = userinfo.link_karma; });
-                ckarma.Invoke((MethodInvoker)delegate { ckarma.Text = userinfo.comment_karma; });
-                messages.Invoke((MethodInvoker)delegate { messages.Text = userinfo.has_mail; });
-            }
+            if (!user.getToken().Equals("")) { connected = true; }
+            formUpdate();
         }
 
         private void scanWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            double postAfter = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds, commentAfter = postAfter;
+            string trigger = Properties.Settings.Default["trigger"].ToString();
+            string subreddit = Properties.Settings.Default["subreddit"].ToString();
             bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
             bool searchComments = (bool)Properties.Settings.Default["searchComments"];
+
+            Scanner scanner = new Scanner(this, trigger, subreddit, searchPosts, searchComments);
             while (started)
             {
-                string url = "https://www.reddit.com/r/" + Properties.Settings.Default["subreddit"].ToString() + "/search/.json?restrict_sr=true&limit=25&sort=new";
-                ApiRequest requestPosts = new ApiRequest(url, "GET");
-                dynamic postResults = requestPosts.getResponse();
-
-                url = "https://www.reddit.com/r/" + Properties.Settings.Default["subreddit"].ToString() + "/comments/.json";
-                ApiRequest requestComments = new ApiRequest(url, "GET");
-                dynamic commentResults = requestComments.getResponse();
-
-                for (int i = 24; i >= 0; i--)
-                {
-                    string title = postResults.data.children[i].data.title;
-                    string body = postResults.data.children[i].data.selftext;
-                    string comment = commentResults.data.children[i].data.body;
-                    string postAuthor = postResults.data.children[i].data.author;
-                    string commentAuthor = commentResults.data.children[i].data.author;
-                    string trigger = Properties.Settings.Default["trigger"].ToString();
-                    double postCreated = postResults.data.children[i].data.created_utc;
-                    double commentCreated = commentResults.data.children[i].data.created_utc;
-
-                    if (postCreated > postAfter)
-                    {
-                        if (title.ToLower().Contains(trigger.ToLower()) && searchPosts)
-                        {
-                            string preview;
-                            if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
-                            else { preview = title.Replace("\n", " "); }
-                            formConsole("Title: \'" + preview + "\' by /u/" + postAuthor);
-                        }
-                        if (body.ToLower().Contains(trigger.ToLower()) && searchPosts)
-                        {
-                            string preview;
-                            if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
-                            else { preview = body.Replace("\n", " "); }
-                            formConsole("Body: \'" + body + "\' by /u/" + postAuthor);
-                        }
-                        postAfter = postCreated;
-                    }
-
-                    if (commentCreated > commentAfter)
-                    {
-                        if (comment.ToLower().Contains(trigger.ToLower()) && searchComments)
-                        {
-                            string preview;
-                            if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
-                            else { preview = comment.Replace("\n", " "); }
-                            formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
-                        }
-                        commentAfter = commentCreated;
-                    }
-                }
-
+                scanner.scanPosts();
+                scanner.scanComments();
                 System.Threading.Thread.Sleep(10000);
             }
         }
@@ -147,9 +94,27 @@ namespace RedditBot
             });
         }
 
-        private void outputBox_LinkClicked(object sender, System.Windows.Forms.LinkClickedEventArgs e)
+        private void formUpdate()
         {
-            System.Diagnostics.Process.Start(e.LinkText);
+            this.Invoke((MethodInvoker)delegate
+            {
+                username.Text = Properties.Settings.Default["username"].ToString();
+                if (started) { running.Text = "Yes"; } else { running.Text = "No"; }
+                if (connected)
+                {
+                    loggedin.Text = "Yes";
+                    lkarma.Text = Convert.ToString(user.getLKarma());
+                    ckarma.Text = Convert.ToString(user.getCKarma());
+                    messages.Text = user.hasMessages();
+                }
+                else
+                {
+                    loggedin.Text = "No";
+                    lkarma.Text = "-";
+                    ckarma.Text = "-";
+                    messages.Text = "-";
+                }
+            });
         }
     }
 }

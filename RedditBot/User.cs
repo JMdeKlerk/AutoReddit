@@ -9,7 +9,8 @@ namespace RedditBot
 {
     class User
     {
-        private string username, password, key, secret, access_token = "";
+        private string username, password, key, secret, access_token, messages = "";
+        private int lkarma, ckarma;
         private DateTime token_expires;
 
         public User(string name, string pass, string key, string secret, Main parent)
@@ -28,6 +29,11 @@ namespace RedditBot
             if (!this.access_token.Equals(""))
             {
                 parent.formConsole("Logged in successfully.");
+                ApiRequest request = new ApiRequest(this, "https://oauth.reddit.com/api/v1/me", "GET");
+                dynamic userinfo = request.getResponse();
+                this.lkarma = userinfo.link_karma;
+                this.ckarma = userinfo.comment_karma;
+                this.messages = userinfo.has_mail;
             }
             else
             {
@@ -82,6 +88,21 @@ namespace RedditBot
         public string getUsername()
         {
             return this.username;
+        }
+
+        public int getLKarma()
+        {
+            return this.lkarma;
+        }
+
+        public int getCKarma()
+        {
+            return this.ckarma;
+        }
+
+        public string hasMessages()
+        {
+            return this.messages;
         }
 
         private bool tokenHasExpired()
