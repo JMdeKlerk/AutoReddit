@@ -10,7 +10,7 @@ namespace RedditBot
     public partial class Main : Form
     {
         private User user = null;
-        private bool connected, started = false;
+        private bool connected, started, cleanup = false;
 
         public Main()
         {
@@ -25,9 +25,16 @@ namespace RedditBot
                 loginWorker.RunWorkerAsync();
             }
 
-            if (connected)
+            else
             {
-                formConsole("Logging out.");
+                if (started)
+                {
+                    formConsole("Run stopped. Cleaning up...");
+                    run.Enabled = false;
+                    started = false;
+                    cleanup = true;
+                }
+                formConsole("Logged out.");
                 connected = false;
                 user = null;
                 formUpdate();
@@ -36,13 +43,21 @@ namespace RedditBot
 
         private void run_Click(object sender, EventArgs e)
         {
-            if (!connected) { formConsole("Run failed: You must log in first. "); }
-            else
+            if (!started)
             {
                 formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString());
                 started = true;
                 scanWorker.RunWorkerAsync();
                 formUpdate();
+            }
+            else
+            {
+                formConsole("Run stopped. Cleaning up...");
+                run.Enabled = false;
+                started = false;
+                cleanup = true;
+                formUpdate();
+
             }
         }
 
@@ -62,7 +77,7 @@ namespace RedditBot
         {
             user = new User(Properties.Settings.Default["username"].ToString(), Properties.Settings.Default["password"].ToString(),
                 Properties.Settings.Default["appkey"].ToString(), Properties.Settings.Default["appsecret"].ToString(), this);
-            if (!user.getToken().Equals("")) { connected = true; }
+            if (!String.IsNullOrEmpty(user.getToken())) { connected = true; }
             formUpdate();
         }
 
@@ -80,6 +95,9 @@ namespace RedditBot
                 scanner.scanComments();
                 System.Threading.Thread.Sleep(10000);
             }
+            formConsole("Cleanup finished.");
+            cleanup = false;
+            formUpdate();
         }
 
         public void formConsole(string data)
@@ -99,20 +117,33 @@ namespace RedditBot
             this.Invoke((MethodInvoker)delegate
             {
                 username.Text = Properties.Settings.Default["username"].ToString();
-                if (started) { running.Text = "Yes"; } else { running.Text = "No"; }
                 if (connected)
                 {
                     loggedin.Text = "Yes";
+                    login.Text = "Logout";
+                    if (!cleanup) { run.Enabled = true; }
                     lkarma.Text = Convert.ToString(user.getLKarma());
                     ckarma.Text = Convert.ToString(user.getCKarma());
                     messages.Text = user.hasMessages();
                 }
                 else
                 {
+                    run.Enabled = false;
                     loggedin.Text = "No";
+                    login.Text = "Login";
                     lkarma.Text = "-";
                     ckarma.Text = "-";
                     messages.Text = "-";
+                }
+                if (started)
+                {
+                    running.Text = "Yes";
+                    run.Text = "Stop";
+                }
+                else
+                {
+                    running.Text = "No";
+                    run.Text = "Run";
                 }
             });
         }

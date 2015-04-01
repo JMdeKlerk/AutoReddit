@@ -275,6 +275,7 @@
             // 
             // run
             // 
+            this.run.Enabled = false;
             this.run.Location = new System.Drawing.Point(109, 208);
             this.run.Name = "run";
             this.run.Size = new System.Drawing.Size(87, 23);

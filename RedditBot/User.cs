@@ -26,7 +26,7 @@ namespace RedditBot
             if (login.TryGetValue("expires_in", out value)) { this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(value)); }
             if (login.TryGetValue("error", out value)) { error = value; }
 
-            if (!this.access_token.Equals(""))
+            if (!String.IsNullOrEmpty(this.access_token))
             {
                 parent.formConsole("Logged in successfully.");
                 ApiRequest request = new ApiRequest(this, "https://oauth.reddit.com/api/v1/me", "GET");
