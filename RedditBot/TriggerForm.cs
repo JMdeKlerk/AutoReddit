@@ -20,6 +20,7 @@ namespace RedditBot
             this.parent = parent;
             searchTextBox.Text = Properties.Settings.Default["trigger"].ToString();
             subredditTextBox.Text = Properties.Settings.Default["subreddit"].ToString();
+            titleSearch.Checked = (bool)Properties.Settings.Default["searchTitles"];
             postSearch.Checked = (bool)Properties.Settings.Default["searchPosts"];
             commentSearch.Checked = (bool)Properties.Settings.Default["searchComments"];
         }
@@ -30,7 +31,8 @@ namespace RedditBot
             Properties.Settings.Default["subreddit"] = subredditTextBox.Text;
             Properties.Settings.Default["searchPosts"] = postSearch.Checked;
             Properties.Settings.Default["searchComments"] = commentSearch.Checked;
-            if (remember.Checked) { Properties.Settings.Default.Save(); }
+            Properties.Settings.Default["searchTitles"] = titleSearch.Checked;
+            Properties.Settings.Default.Save();
             parent.formConsole("Trigger settings successfully updated.");
             this.Close();
         }
@@ -43,7 +45,13 @@ namespace RedditBot
 
         private void advanced_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Currently in development");
+            MessageBox.Show("Currently in development.");
+        }
+
+        private void messageSearch_CheckedChanged(object sender, EventArgs e)
+        {
+            if (messageSearch.Checked) { MessageBox.Show("Currently in development."); }
+            messageSearch.Checked = false;
         }
     }
 }

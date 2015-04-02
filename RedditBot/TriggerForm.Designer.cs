@@ -37,37 +37,38 @@
             this.commentSearch = new System.Windows.Forms.CheckBox();
             this.confirmButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.remember = new System.Windows.Forms.CheckBox();
             this.advanced = new System.Windows.Forms.Button();
+            this.titleSearch = new System.Windows.Forms.CheckBox();
+            this.messageSearch = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // searchTextBox
             // 
-            this.searchTextBox.Location = new System.Drawing.Point(81, 35);
+            this.searchTextBox.Location = new System.Drawing.Point(97, 12);
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(191, 20);
+            this.searchTextBox.Size = new System.Drawing.Size(170, 20);
             this.searchTextBox.TabIndex = 0;
             // 
             // subredditTextBox
             // 
-            this.subredditTextBox.Location = new System.Drawing.Point(81, 62);
+            this.subredditTextBox.Location = new System.Drawing.Point(97, 38);
             this.subredditTextBox.Name = "subredditTextBox";
-            this.subredditTextBox.Size = new System.Drawing.Size(191, 20);
+            this.subredditTextBox.Size = new System.Drawing.Size(170, 20);
             this.subredditTextBox.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 38);
+            this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 13);
+            this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Search for:";
+            this.label1.Text = "Trigger:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 13);
+            this.label2.Location = new System.Drawing.Point(12, 67);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 6;
@@ -76,7 +77,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 65);
+            this.label3.Location = new System.Drawing.Point(12, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(55, 13);
             this.label3.TabIndex = 7;
@@ -85,7 +86,7 @@
             // postSearch
             // 
             this.postSearch.AutoSize = true;
-            this.postSearch.Location = new System.Drawing.Point(81, 12);
+            this.postSearch.Location = new System.Drawing.Point(186, 66);
             this.postSearch.Name = "postSearch";
             this.postSearch.Size = new System.Drawing.Size(52, 17);
             this.postSearch.TabIndex = 9;
@@ -95,7 +96,7 @@
             // commentSearch
             // 
             this.commentSearch.AutoSize = true;
-            this.commentSearch.Location = new System.Drawing.Point(139, 12);
+            this.commentSearch.Location = new System.Drawing.Point(98, 89);
             this.commentSearch.Name = "commentSearch";
             this.commentSearch.Size = new System.Drawing.Size(75, 17);
             this.commentSearch.TabIndex = 11;
@@ -104,9 +105,9 @@
             // 
             // confirmButton
             // 
-            this.confirmButton.Location = new System.Drawing.Point(96, 122);
+            this.confirmButton.Location = new System.Drawing.Point(97, 122);
             this.confirmButton.Name = "confirmButton";
-            this.confirmButton.Size = new System.Drawing.Size(85, 23);
+            this.confirmButton.Size = new System.Drawing.Size(82, 23);
             this.confirmButton.TabIndex = 12;
             this.confirmButton.Text = "Confirm";
             this.confirmButton.UseVisualStyleBackColor = true;
@@ -114,43 +115,53 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(187, 122);
+            this.cancelButton.Location = new System.Drawing.Point(185, 122);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(85, 23);
+            this.cancelButton.Size = new System.Drawing.Size(82, 23);
             this.cancelButton.TabIndex = 13;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // remember
-            // 
-            this.remember.AutoSize = true;
-            this.remember.Checked = true;
-            this.remember.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.remember.Location = new System.Drawing.Point(15, 126);
-            this.remember.Name = "remember";
-            this.remember.Size = new System.Drawing.Size(77, 17);
-            this.remember.TabIndex = 14;
-            this.remember.Text = "Remember";
-            this.remember.UseVisualStyleBackColor = true;
-            // 
             // advanced
             // 
-            this.advanced.Location = new System.Drawing.Point(15, 93);
+            this.advanced.Location = new System.Drawing.Point(9, 122);
             this.advanced.Name = "advanced";
-            this.advanced.Size = new System.Drawing.Size(257, 23);
+            this.advanced.Size = new System.Drawing.Size(82, 23);
             this.advanced.TabIndex = 15;
             this.advanced.Text = "Advanced";
             this.advanced.UseVisualStyleBackColor = true;
             this.advanced.Click += new System.EventHandler(this.advanced_Click);
             // 
+            // titleSearch
+            // 
+            this.titleSearch.AutoSize = true;
+            this.titleSearch.Location = new System.Drawing.Point(98, 66);
+            this.titleSearch.Name = "titleSearch";
+            this.titleSearch.Size = new System.Drawing.Size(51, 17);
+            this.titleSearch.TabIndex = 16;
+            this.titleSearch.Text = "Titles";
+            this.titleSearch.UseVisualStyleBackColor = true;
+            // 
+            // messageSearch
+            // 
+            this.messageSearch.AutoSize = true;
+            this.messageSearch.Location = new System.Drawing.Point(186, 89);
+            this.messageSearch.Name = "messageSearch";
+            this.messageSearch.Size = new System.Drawing.Size(74, 17);
+            this.messageSearch.TabIndex = 17;
+            this.messageSearch.Text = "Messages";
+            this.messageSearch.UseVisualStyleBackColor = true;
+            this.messageSearch.CheckedChanged += new System.EventHandler(this.messageSearch_CheckedChanged);
+            // 
             // TriggerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 157);
+            this.ClientSize = new System.Drawing.Size(279, 157);
+            this.Controls.Add(this.messageSearch);
+            this.Controls.Add(this.titleSearch);
             this.Controls.Add(this.advanced);
-            this.Controls.Add(this.remember);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.commentSearch);
@@ -179,7 +190,8 @@
         private System.Windows.Forms.CheckBox commentSearch;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.CheckBox remember;
         private System.Windows.Forms.Button advanced;
+        private System.Windows.Forms.CheckBox titleSearch;
+        private System.Windows.Forms.CheckBox messageSearch;
     }
 }

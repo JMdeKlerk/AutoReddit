@@ -118,5 +118,17 @@ namespace RedditBot.Properties {
                 this["searchComments"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool searchTitles {
+            get {
+                return ((bool)(this["searchTitles"]));
+            }
+            set {
+                this["searchTitles"] = value;
+            }
+        }
     }
 }

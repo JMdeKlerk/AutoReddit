@@ -10,21 +10,28 @@ namespace RedditBot
     {
         private Main parent;
         double postAfter, commentAfter;
-        bool searchPosts, searchComments;
+        bool searchTitles, searchPosts, searchComments, searchMessages;
         string trigger, subreddit, preview;
 
-        public Scanner(Main parent, string trigger, string subreddit, bool posts, bool comments)
+        public Scanner(Main parent, string trigger, string subreddit, bool titles, bool posts, bool comments)
         {
             this.parent = parent;
             this.trigger = trigger;
             this.subreddit = subreddit;
+            this.searchTitles = titles;
             this.searchPosts = posts;
             this.searchComments = comments;
             this.postAfter = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
             this.commentAfter = this.postAfter;
         }
+        
+        public void scan()
+        {
+            if (searchTitles || searchPosts) { this.scanPosts(); }
+            if (searchComments) { this.scanComments(); }
+        }
 
-        public void scanPosts()
+        private void scanPosts()
         {
             string url = "https://www.reddit.com/r/" + subreddit + "/search/.json?restrict_sr=true&limit=25&sort=new";
             ApiRequest requestPosts = new ApiRequest(url, "GET");
@@ -39,7 +46,7 @@ namespace RedditBot
 
                 if (postCreated > postAfter)
                 {
-                    if (title.ToLower().Contains(this.trigger.ToLower()) && searchPosts)
+                    if (title.ToLower().Contains(this.trigger.ToLower()) && searchTitles)
                     {
                         if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
                         else { preview = title.Replace("\n", " "); }
@@ -49,14 +56,14 @@ namespace RedditBot
                     {
                         if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
                         else { preview = body.Replace("\n", " "); }
-                        parent.formConsole("Body: \'" + body + "\' by /u/" + postAuthor);
+                        parent.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
                     }
                     postAfter = postCreated;
                 }
             }
         }
 
-        public void scanComments()
+        private void scanComments()
         {
             string url = "https://www.reddit.com/r/" + this.subreddit + "/comments/.json";
             ApiRequest requestComments = new ApiRequest(url, "GET");
@@ -70,7 +77,7 @@ namespace RedditBot
 
                 if (commentCreated > commentAfter)
                 {
-                    if (comment.ToLower().Contains(this.trigger.ToLower()) && searchComments)
+                    if (comment.ToLower().Contains(this.trigger.ToLower()))
                     {
                         if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
                         else { preview = comment.Replace("\n", " "); }
@@ -79,6 +86,11 @@ namespace RedditBot
                     commentAfter = commentCreated;
                 }
             }
+        }
+
+        private void scanMessages()
+        {
+            // TODO
         }
     }
 }

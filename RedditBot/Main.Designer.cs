@@ -74,6 +74,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.outputBox.BackColor = System.Drawing.SystemColors.Control;
             this.outputBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.outputBox.DetectUrls = false;
             this.outputBox.Font = new System.Drawing.Font("Consolas", 8F);
             this.outputBox.ForeColor = System.Drawing.SystemColors.InfoText;
             this.outputBox.Location = new System.Drawing.Point(6, 15);
@@ -85,6 +86,9 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.outputBox);
             this.groupBox4.Location = new System.Drawing.Point(208, 27);
             this.groupBox4.Name = "groupBox4";
@@ -132,6 +136,7 @@
             this.responseToolStripMenuItem.Name = "responseToolStripMenuItem";
             this.responseToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.responseToolStripMenuItem.Text = "Response";
+            this.responseToolStripMenuItem.Click += new System.EventHandler(this.responseToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -294,9 +299,9 @@
             this.Controls.Add(this.run);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(746, 281);
             this.Name = "Main";
             this.Text = "C# Reddit Bot 0.1";
             this.groupBox4.ResumeLayout(false);

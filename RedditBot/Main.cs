@@ -73,6 +73,12 @@ namespace RedditBot
             trigger.ShowDialog();
         }
 
+        private void responseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResponseForm response = new ResponseForm(this);
+            response.ShowDialog();
+        }
+
         private void loginWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             user = new User(Properties.Settings.Default["username"].ToString(), Properties.Settings.Default["password"].ToString(),
@@ -85,14 +91,14 @@ namespace RedditBot
         {
             string trigger = Properties.Settings.Default["trigger"].ToString();
             string subreddit = Properties.Settings.Default["subreddit"].ToString();
+            bool searchTitles = (bool)Properties.Settings.Default["searchTitles"];
             bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
             bool searchComments = (bool)Properties.Settings.Default["searchComments"];
 
-            Scanner scanner = new Scanner(this, trigger, subreddit, searchPosts, searchComments);
+            Scanner scanner = new Scanner(this, trigger, subreddit, searchTitles, searchPosts, searchComments);
             while (started)
             {
-                scanner.scanPosts();
-                scanner.scanComments();
+                scanner.scan();
                 System.Threading.Thread.Sleep(10000);
             }
             formConsole("Cleanup finished.");
