@@ -45,7 +45,13 @@ namespace RedditBot
         {
             if (!started)
             {
-                formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString());
+                string searchin = " (";
+                if ((bool)Properties.Settings.Default["searchTitles"]) { searchin += "titles, "; }
+                if ((bool)Properties.Settings.Default["searchPosts"]) { searchin += "posts, "; }
+                if ((bool)Properties.Settings.Default["searchComments"]) { searchin += "comments, "; }
+                searchin = searchin.Remove(searchin.Length - 2);
+                searchin += ")";
+                formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString() + searchin);
                 started = true;
                 scanWorker.RunWorkerAsync();
                 formUpdate();
