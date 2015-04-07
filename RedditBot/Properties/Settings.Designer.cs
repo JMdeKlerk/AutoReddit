@@ -130,5 +130,29 @@ namespace RedditBot.Properties {
                 this["searchTitles"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string action {
+            get {
+                return ((string)(this["action"]));
+            }
+            set {
+                this["action"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string content {
+            get {
+                return ((string)(this["content"]));
+            }
+            set {
+                this["content"] = value;
+            }
+        }
     }
 }

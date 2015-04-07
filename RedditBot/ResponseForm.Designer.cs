@@ -28,22 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.action = new System.Windows.Forms.ComboBox();
             this.advanced = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.confirmButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.contentBox = new System.Windows.Forms.RichTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // action
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(97, 12);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(170, 21);
-            this.comboBox1.TabIndex = 1;
+            this.action.FormattingEnabled = true;
+            this.action.Items.AddRange(new object[] {
+            "Alert",
+            "Reply",
+            "Message"});
+            this.action.Location = new System.Drawing.Point(97, 12);
+            this.action.Name = "action";
+            this.action.Size = new System.Drawing.Size(170, 21);
+            this.action.TabIndex = 1;
+            this.action.Text = "Alert";
+            this.action.SelectedIndexChanged += new System.EventHandler(this.action_SelectedIndexChanged);
             // 
             // advanced
             // 
@@ -53,6 +59,7 @@
             this.advanced.TabIndex = 19;
             this.advanced.Text = "Advanced";
             this.advanced.UseVisualStyleBackColor = true;
+            this.advanced.Click += new System.EventHandler(this.advanced_Click);
             // 
             // cancelButton
             // 
@@ -62,6 +69,7 @@
             this.cancelButton.TabIndex = 17;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
             // confirmButton
             // 
@@ -71,6 +79,7 @@
             this.confirmButton.TabIndex = 16;
             this.confirmButton.Text = "Confirm";
             this.confirmButton.UseVisualStyleBackColor = true;
+            this.confirmButton.Click += new System.EventHandler(this.confirmButton_Click);
             // 
             // label1
             // 
@@ -81,13 +90,14 @@
             this.label1.TabIndex = 20;
             this.label1.Text = "Action:";
             // 
-            // richTextBox1
+            // contentBox
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(97, 40);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(170, 76);
-            this.richTextBox1.TabIndex = 21;
-            this.richTextBox1.Text = "";
+            this.contentBox.Enabled = false;
+            this.contentBox.Location = new System.Drawing.Point(97, 40);
+            this.contentBox.Name = "contentBox";
+            this.contentBox.Size = new System.Drawing.Size(170, 76);
+            this.contentBox.TabIndex = 21;
+            this.contentBox.Text = "";
             // 
             // label2
             // 
@@ -104,12 +114,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(279, 157);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.contentBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.advanced);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.confirmButton);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.action);
             this.Name = "ResponseForm";
             this.Text = "Response Settings";
             this.ResumeLayout(false);
@@ -119,12 +129,12 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox action;
         private System.Windows.Forms.Button advanced;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button confirmButton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox contentBox;
         private System.Windows.Forms.Label label2;
     }
 }

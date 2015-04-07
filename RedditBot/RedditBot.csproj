@@ -55,6 +55,7 @@
       <DependentUpon>AccountForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ApiRequest.cs" />
+    <Compile Include="FlashWindow.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

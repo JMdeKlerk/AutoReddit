@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Media;
 using System.Windows.Forms;
 
 namespace RedditBot
@@ -101,7 +102,7 @@ namespace RedditBot
             bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
             bool searchComments = (bool)Properties.Settings.Default["searchComments"];
 
-            Scanner scanner = new Scanner(this, trigger, subreddit, searchTitles, searchPosts, searchComments);
+            Scanner scanner = new Scanner(this, user, trigger, subreddit, searchTitles, searchPosts, searchComments);
             while (started)
             {
                 scanner.scan();

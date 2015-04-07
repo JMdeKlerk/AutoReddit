@@ -33,7 +33,7 @@ namespace RedditBot
             Properties.Settings.Default["searchComments"] = commentSearch.Checked;
             Properties.Settings.Default["searchTitles"] = titleSearch.Checked;
             Properties.Settings.Default.Save();
-            parent.formConsole("Trigger settings successfully updated.");
+            parent.formConsole("Trigger settings saved.");
             this.Close();
         }
 
