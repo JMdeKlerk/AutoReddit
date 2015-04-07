@@ -106,7 +106,7 @@ namespace RedditBot
             while (started)
             {
                 scanner.scan();
-                System.Threading.Thread.Sleep(10000);
+                System.Threading.Thread.Sleep(60000);
             }
             formConsole("Cleanup finished.");
             cleanup = false;

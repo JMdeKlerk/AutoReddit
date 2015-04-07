@@ -53,11 +53,8 @@ namespace RedditBot
                     body = postResults.data.children[i].data.selftext;
                     postAuthor = postResults.data.children[i].data.author;
                     postCreated = postResults.data.children[i].data.created_utc;
-                    fullname = postResults.data.after;
-                }
-                catch (ArgumentOutOfRangeException e) { i = -1; }
-                finally
-                {
+                    fullname = postResults.data.children[i].data.name;
+
                     if (postCreated > postAfter)
                     {
                         if (title.ToLower().Contains(this.trigger.ToLower()) && searchTitles)
@@ -77,6 +74,7 @@ namespace RedditBot
                         postAfter = postCreated;
                     }
                 }
+                catch (ArgumentOutOfRangeException e) { }
             }
         }
 
@@ -96,12 +94,7 @@ namespace RedditBot
                     comment = commentResults.data.children[i].data.body;
                     commentAuthor = commentResults.data.children[i].data.author;
                     commentCreated = commentResults.data.children[i].data.created_utc;
-                    fullname = commentResults.data.after;
-                }
-                catch (ArgumentOutOfRangeException e) { i = -1; }
-                finally
-                {
-
+                    fullname = commentResults.data.children[i].data.name; 
                     if (commentCreated > commentAfter)
                     {
                         if (comment.ToLower().Contains(this.trigger.ToLower()))
@@ -114,6 +107,7 @@ namespace RedditBot
                         commentAfter = commentCreated;
                     }
                 }
+                catch (ArgumentOutOfRangeException e) { }
             }
         }
 

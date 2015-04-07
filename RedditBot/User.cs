@@ -29,6 +29,7 @@ namespace RedditBot
             if (!String.IsNullOrEmpty(this.access_token))
             {
                 parent.formConsole("Logged in successfully.");
+                Console.WriteLine(this.access_token);
                 ApiRequest request = new ApiRequest(this, "https://oauth.reddit.com/api/v1/me", "GET");
                 dynamic userinfo = request.getResponse();
                 this.lkarma = userinfo.link_karma;
