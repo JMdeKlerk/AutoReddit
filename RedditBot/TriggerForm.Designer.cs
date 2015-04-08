@@ -152,7 +152,6 @@
             this.messageSearch.TabIndex = 17;
             this.messageSearch.Text = "Messages";
             this.messageSearch.UseVisualStyleBackColor = true;
-            this.messageSearch.CheckedChanged += new System.EventHandler(this.messageSearch_CheckedChanged);
             // 
             // TriggerForm
             // 

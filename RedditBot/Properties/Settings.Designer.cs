@@ -154,5 +154,17 @@ namespace RedditBot.Properties {
                 this["content"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool searchMessages {
+            get {
+                return ((bool)(this["searchMessages"]));
+            }
+            set {
+                this["searchMessages"] = value;
+            }
+        }
     }
 }

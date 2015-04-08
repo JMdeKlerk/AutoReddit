@@ -23,6 +23,7 @@ namespace RedditBot
             titleSearch.Checked = (bool)Properties.Settings.Default["searchTitles"];
             postSearch.Checked = (bool)Properties.Settings.Default["searchPosts"];
             commentSearch.Checked = (bool)Properties.Settings.Default["searchComments"];
+            messageSearch.Checked = (bool)Properties.Settings.Default["searchMessages"];
         }
 
         private void confirmButton_Click(object sender, EventArgs e)
@@ -32,6 +33,7 @@ namespace RedditBot
             Properties.Settings.Default["searchPosts"] = postSearch.Checked;
             Properties.Settings.Default["searchComments"] = commentSearch.Checked;
             Properties.Settings.Default["searchTitles"] = titleSearch.Checked;
+            Properties.Settings.Default["searchMessages"] = messageSearch.Checked;
             Properties.Settings.Default.Save();
             parent.formConsole("Trigger settings saved.");
             this.Close();
@@ -46,12 +48,6 @@ namespace RedditBot
         private void advanced_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Currently in development.");
-        }
-
-        private void messageSearch_CheckedChanged(object sender, EventArgs e)
-        {
-            if (messageSearch.Checked) { MessageBox.Show("Currently in development."); }
-            messageSearch.Checked = false;
         }
     }
 }

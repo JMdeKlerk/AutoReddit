@@ -296,6 +296,7 @@
             this.MinimumSize = new System.Drawing.Size(746, 281);
             this.Name = "Main";
             this.Text = "C# Reddit Bot 0.1";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox4.ResumeLayout(false);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

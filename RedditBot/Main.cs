@@ -50,6 +50,7 @@ namespace RedditBot
                 if ((bool)Properties.Settings.Default["searchTitles"]) { searchin += "titles, "; }
                 if ((bool)Properties.Settings.Default["searchPosts"]) { searchin += "posts, "; }
                 if ((bool)Properties.Settings.Default["searchComments"]) { searchin += "comments, "; }
+                if ((bool)Properties.Settings.Default["searchMessages"]) { searchin += "messages, "; }
                 searchin = searchin.Remove(searchin.Length - 2);
                 searchin += ")";
                 formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString() + searchin);
@@ -104,12 +105,13 @@ namespace RedditBot
             bool searchTitles = (bool)Properties.Settings.Default["searchTitles"];
             bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
             bool searchComments = (bool)Properties.Settings.Default["searchComments"];
+            bool searchMessages = (bool)Properties.Settings.Default["searchMessages"];
 
-            Scanner scanner = new Scanner(this, user, trigger, subreddit, searchTitles, searchPosts, searchComments);
+            Scanner scanner = new Scanner(this, user, trigger, subreddit, searchTitles, searchPosts, searchComments, searchMessages);
             while (started)
             {
                 scanner.scan();
-                System.Threading.Thread.Sleep(60000);
+                System.Threading.Thread.Sleep(20000);
             }
             formConsole("Cleanup finished.");
             cleanup = false;
@@ -162,6 +164,11 @@ namespace RedditBot
                     run.Text = "Run";
                 }
             });
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            formUpdate();
         }
     }
 }

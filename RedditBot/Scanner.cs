@@ -17,7 +17,7 @@ namespace RedditBot
         private bool searchTitles, searchPosts, searchComments, searchMessages;
         private string trigger, subreddit, preview;
 
-        public Scanner(Main form, User user, string trigger, string subreddit, bool titles, bool posts, bool comments)
+        public Scanner(Main form, User user, string trigger, string subreddit, bool titles, bool posts, bool comments, bool messages)
         {
             this.mainForm = form;
             this.user = user;
@@ -26,6 +26,7 @@ namespace RedditBot
             this.searchTitles = titles;
             this.searchPosts = posts;
             this.searchComments = comments;
+            this.searchMessages = messages;
             this.postAfter = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0)).TotalSeconds;
             this.commentAfter = this.postAfter;
         }
@@ -34,6 +35,7 @@ namespace RedditBot
         {
             if (searchTitles || searchPosts) { this.scanPosts(); }
             if (searchComments) { this.scanComments(); }
+            if (searchMessages) { this.scanMessages(); }
         }
 
         private void scanPosts()
@@ -69,7 +71,7 @@ namespace RedditBot
                             if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = body.Replace("\n", " "); }
                             mainForm.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
-                            this.respond(fullname, "Shindogo");
+                            this.respond(fullname, postAuthor);
                         }
                         postAfter = postCreated;
                     }
@@ -102,7 +104,7 @@ namespace RedditBot
                             if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = comment.Replace("\n", " "); }
                             mainForm.formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
-                            this.respond(fullname, "Shindogo");
+                            this.respond(fullname, commentAuthor);
                         }
                         commentAfter = commentCreated;
                     }
@@ -113,7 +115,38 @@ namespace RedditBot
 
         private void scanMessages()
         {
-            // TODO
+            string url = "https://oauth.reddit.com/message/unread";
+            ApiRequest requestMessages = new ApiRequest(user, url, "GET");
+            dynamic messageResults = requestMessages.getResponse();
+            string message, sender, fullname;
+            bool wasComment;
+            message = sender = fullname = "";
+
+            for (int i = 24; i >= 0; i--)
+            {
+                try
+                {
+                    message = messageResults.data.children[i].data.body;
+                    sender = messageResults.data.children[i].data.author;
+                    fullname = messageResults.data.children[i].data.name;
+                    wasComment = messageResults.data.children[i].data.was_comment;
+                    if (!wasComment)
+                    {
+                        if (message.ToLower().Contains(this.trigger.ToLower()))
+                        {
+                            if (message.Length > 25) { preview = message.Remove(24).Replace("\n", " ") + "..."; }
+                            else { preview = message.Replace("\n", " "); }
+                            mainForm.formConsole("Message: \'" + preview + "\' by /u/" + sender);
+                            this.respond(fullname, sender);
+                            url = "https://oauth.reddit.com/api/read_message";
+                            Hashtable args = new Hashtable();
+                            args.Add("id", fullname);
+                            ApiRequest markAsRead = new ApiRequest(user, url, "POST", args);
+                        }
+                    }
+                }
+                catch (ArgumentOutOfRangeException e) { }
+            }
         }
 
         private void respond(String source, String recipient)
