@@ -70,7 +70,7 @@ namespace RedditBot
                 if (values.TryGetValue("expires_in", out value)) { this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(value)); }
                 if (values.TryGetValue("error", out value)) { this.error = value; }
             }
-            catch
+            catch (WebException e)
             {
                 this.error = "invalid_auth";
             }
