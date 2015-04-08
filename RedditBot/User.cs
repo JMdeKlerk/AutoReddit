@@ -9,7 +9,7 @@ namespace RedditBot
 {
     class User
     {
-        private string username, password, key, secret, access_token, messages = "";
+        private string username, password, key, secret, access_token, messages, error = "";
         private int lkarma, ckarma;
         private DateTime token_expires;
 
@@ -20,16 +20,11 @@ namespace RedditBot
             this.key = key;
             this.secret = secret;
 
-            var login = loginUser(name, pass, key, secret);
-            string value, error = null;
-            if (login.TryGetValue("access_token", out value)) { this.access_token = value; }
-            if (login.TryGetValue("expires_in", out value)) { this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(value)); }
-            if (login.TryGetValue("error", out value)) { error = value; }
+            loginUser(name, pass, key, secret);
 
             if (!String.IsNullOrEmpty(this.access_token))
             {
                 parent.formConsole("Logged in successfully.");
-                Console.WriteLine(this.access_token);
                 ApiRequest request = new ApiRequest(this, "https://oauth.reddit.com/api/v1/me", "GET");
                 dynamic userinfo = request.getResponse();
                 this.lkarma = userinfo.link_karma;
@@ -39,13 +34,12 @@ namespace RedditBot
             else
             {
                 if (error.Equals("invalid_grant")) { error = "Username or password incorrect."; }
-                else if (error.Equals("invalid_auth")) { error = "Authorization failed. The server may be down or your app key/secret may be invalid."; }
-                else { error = "Unkown error type: " + error; }
+                if (error.Equals("invalid_auth")) { error = "Authorization failed. The server may be down or your app key/secret may be invalid."; }
                 parent.formConsole("Error: " + error);
             }
         }
 
-        public Dictionary<string, string> loginUser(string name, string pass, string key, string secret)
+        private void loginUser(string name, string pass, string key, string secret)
         {
             string url = "https://www.reddit.com/api/v1/access_token";
             string postData = "username=" + name + "&password=" + pass + "&grant_type=password";
@@ -71,18 +65,20 @@ namespace RedditBot
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 StreamReader read = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(read.ReadToEnd());
-                return values;
+                string value = null;
+                if (values.TryGetValue("access_token", out value)) { this.access_token = value; }
+                if (values.TryGetValue("expires_in", out value)) { this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(value)); }
+                if (values.TryGetValue("error", out value)) { this.error = value; }
             }
             catch
             {
-                Dictionary<string, string> failed = new Dictionary<string,string>();
-                failed.Add("error", "invalid_auth");
-                return failed;
+                this.error = "invalid_auth";
             }
         }
 
         public string getToken()
         {
+            if (this.tokenHasExpired()) { loginUser(username, password, key, secret); }
             return this.access_token;
         }
 

@@ -71,18 +71,21 @@ namespace RedditBot
         private void accountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AccountForm account = new AccountForm(this);
+            account.StartPosition = FormStartPosition.CenterParent;
             account.ShowDialog();
         }
 
         private void triggerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             TriggerForm trigger = new TriggerForm(this);
+            trigger.StartPosition = FormStartPosition.CenterParent;
             trigger.ShowDialog();
         }
 
         private void responseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ResponseForm response = new ResponseForm(this);
+            response.StartPosition = FormStartPosition.CenterParent;
             response.ShowDialog();
         }
 

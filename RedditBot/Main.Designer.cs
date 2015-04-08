@@ -37,7 +37,6 @@
             this.accountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.triggerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.responseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -109,8 +108,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.accountToolStripMenuItem,
             this.triggerToolStripMenuItem,
-            this.responseToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.responseToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(730, 24);
@@ -137,12 +135,6 @@
             this.responseToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.responseToolStripMenuItem.Text = "Response";
             this.responseToolStripMenuItem.Click += new System.EventHandler(this.responseToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.aboutToolStripMenuItem.Text = "About";
             // 
             // groupBox1
             // 
@@ -325,7 +317,6 @@
         private System.Windows.Forms.ToolStripMenuItem accountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem triggerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem responseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button run;
         private System.Windows.Forms.Label label6;
