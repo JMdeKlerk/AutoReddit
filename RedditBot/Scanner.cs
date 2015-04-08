@@ -153,6 +153,7 @@ namespace RedditBot
         {
             string action = Properties.Settings.Default["action"].ToString();
             string content = Properties.Settings.Default["content"].ToString();
+            content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^by ^/u/Shindogo ^- ^Like ^me? ^Want ^your ^own? [^Get ^one ^here!](https://github.com/JMdeKlerk/RedditBot)";
 
             if (action.Equals("Alert")) { mainForm.Invoke((MethodInvoker)delegate { FlashWindow.Flash(mainForm, 5); SystemSounds.Beep.Play(); }); }
             if (action.Equals("Reply"))
