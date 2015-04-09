@@ -170,7 +170,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.subredditTextBox);
             this.Controls.Add(this.searchTextBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "TriggerForm";
             this.Text = "Trigger Settings";
             this.ResumeLayout(false);

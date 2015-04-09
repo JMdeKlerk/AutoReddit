@@ -120,8 +120,10 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.action);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ResponseForm";
             this.Text = "Response Settings";
+            this.Load += new System.EventHandler(this.ResponseForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
