@@ -92,7 +92,7 @@ namespace RedditBot
                     comment = commentResults.data.children[i].data.body;
                     commentAuthor = commentResults.data.children[i].data.author;
                     commentCreated = commentResults.data.children[i].data.created_utc;
-                    fullname = commentResults.data.children[i].data.name; 
+                    fullname = commentResults.data.children[i].data.name;
                     if (commentCreated > commentAfter)
                     {
                         if (comment.ToLower().Contains(this.trigger.ToLower()))
@@ -151,7 +151,15 @@ namespace RedditBot
             string content = Properties.Settings.Default["content"].ToString();
             content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^by ^/u/Shindogo ^- ^Like ^me? ^Want ^your ^own? [^Get ^one ^here!](https://github.com/JMdeKlerk/RedditBot)";
 
-            if (action.Equals("Alert")) { mainForm.Invoke((MethodInvoker)delegate { FlashWindow.Flash(mainForm, 5); SystemSounds.Beep.Play(); }); }
+            if (action.Equals("Alert"))
+            {
+                mainForm.Invoke((MethodInvoker)delegate
+                {
+                    mainForm.Show();
+                    FlashWindow.Flash(mainForm, 5);
+                    SystemSounds.Beep.Play();
+                });
+            }
             if (action.Equals("Reply"))
             {
                 string url = "https://oauth.reddit.com/api/comment";

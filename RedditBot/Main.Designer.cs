@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.login = new System.Windows.Forms.Button();
             this.outputBox = new System.Windows.Forms.RichTextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -51,6 +53,7 @@
             this.lkarma = new System.Windows.Forms.TextBox();
             this.username = new System.Windows.Forms.TextBox();
             this.run = new System.Windows.Forms.Button();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox4.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -281,6 +284,13 @@
             this.run.UseVisualStyleBackColor = true;
             this.run.Click += new System.EventHandler(this.run_Click);
             // 
+            // trayIcon
+            // 
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.Text = "Reddit Bot";
+            this.trayIcon.Visible = true;
+            this.trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseDoubleClick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -291,11 +301,13 @@
             this.Controls.Add(this.run);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(746, 281);
             this.Name = "Main";
             this.Text = "C# Reddit Bot 0.1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.groupBox4.ResumeLayout(false);
             this.menuStrip.ResumeLayout(false);
@@ -332,6 +344,7 @@
         private System.Windows.Forms.TextBox running;
         private System.Windows.Forms.TextBox lkarma;
         public System.Windows.Forms.TextBox username;
+        private System.Windows.Forms.NotifyIcon trayIcon;
     }
 }
 

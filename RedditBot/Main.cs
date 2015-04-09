@@ -180,5 +180,35 @@ namespace RedditBot
         {
             formUpdate();
         }
+
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                if (started)
+                {
+                    var confirmResult = MessageBox.Show("Bot is running. Minimize to tray?", "Quit", MessageBoxButtons.YesNoCancel);
+                    if (confirmResult == DialogResult.Yes)
+                    {
+                        this.Hide();
+                        e.Cancel = true;
+                    }
+                    else if (confirmResult == DialogResult.No)
+                    {
+                        this.FormClosing -= Main_FormClosing;
+                        this.Close();
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            }
+        }
+
+        private void trayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+        }
     }
 }
