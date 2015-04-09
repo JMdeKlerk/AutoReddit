@@ -64,7 +64,6 @@
             this.secretTextBox.Name = "secretTextBox";
             this.secretTextBox.Size = new System.Drawing.Size(170, 20);
             this.secretTextBox.TabIndex = 4;
-            this.secretTextBox.UseSystemPasswordChar = true;
             // 
             // keyTextBox
             // 
