@@ -210,5 +210,16 @@ namespace RedditBot
         {
             this.Show();
         }
+
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Show();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.FormClosing -= Main_FormClosing;
+            this.Close();
+        }
     }
 }
