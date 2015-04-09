@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Media;
 using System.Windows.Forms;
 
 namespace RedditBot
@@ -16,6 +12,27 @@ namespace RedditBot
         public Main()
         {
             InitializeComponent();
+        }
+
+        private void accountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AccountForm account = new AccountForm(this);
+            account.StartPosition = FormStartPosition.CenterParent;
+            account.ShowDialog();
+        }
+
+        private void triggerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TriggerForm trigger = new TriggerForm(this);
+            trigger.StartPosition = FormStartPosition.CenterParent;
+            trigger.ShowDialog();
+        }
+
+        private void responseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ResponseForm response = new ResponseForm(this);
+            response.StartPosition = FormStartPosition.CenterParent;
+            response.ShowDialog();
         }
 
         private void login_Click(object sender, EventArgs e)
@@ -44,50 +61,43 @@ namespace RedditBot
 
         private void run_Click(object sender, EventArgs e)
         {
-            if (!started)
-            {
-                string searchin = " (";
-                if ((bool)Properties.Settings.Default["searchTitles"]) { searchin += "titles, "; }
-                if ((bool)Properties.Settings.Default["searchPosts"]) { searchin += "posts, "; }
-                if ((bool)Properties.Settings.Default["searchComments"]) { searchin += "comments, "; }
-                if ((bool)Properties.Settings.Default["searchMessages"]) { searchin += "messages, "; }
-                searchin = searchin.Remove(searchin.Length - 2);
-                searchin += ")";
-                formConsole("Run started. Searching for \'" + Properties.Settings.Default["trigger"].ToString() + "\' in /r/" + Properties.Settings.Default["subreddit"].ToString() + searchin);
-                started = true;
-                scanWorker.RunWorkerAsync();
-                formUpdate();
-            }
+            bool searchTitles = (bool)Properties.Settings.Default["searchTitles"];
+            bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
+            bool searchComments = (bool)Properties.Settings.Default["searchComments"];
+            bool searchMessages = (bool)Properties.Settings.Default["searchMessages"];
+            string trigger = Properties.Settings.Default["trigger"].ToString();
+            string subreddit = Properties.Settings.Default["subreddit"].ToString();
+
+            if (!searchTitles && !searchPosts && !searchComments && !searchMessages) { formConsole("Run failed: You must select search locations."); }
+            else if (String.IsNullOrEmpty(trigger)) { formConsole("Run failed: Select a trigger to search for."); }
+            else if (String.IsNullOrEmpty(subreddit) && (searchTitles || searchPosts || searchComments)) { formConsole("Run failed: Select a subreddit to search in."); }
             else
             {
-                formConsole("Run stopped. Cleaning up...");
-                run.Enabled = false;
-                started = false;
-                cleanup = true;
-                formUpdate();
-
+                if (!started)
+                {
+                    string searchin = " (";
+                    if (searchTitles) { searchin += "titles, "; }
+                    if (searchPosts) { searchin += "posts, "; }
+                    if (searchComments) { searchin += "comments, "; }
+                    if (searchMessages) { searchin += "messages, "; }
+                    searchin = searchin.Remove(searchin.Length - 2);
+                    searchin += ")";
+                    searchin = "/r/" + subreddit + searchin;
+                    if (!searchComments && !searchPosts && !searchTitles) { searchin = "private messages"; }
+                    formConsole("Run started. Searching for \'" + trigger + "\' in " + searchin);
+                    started = true;
+                    scanWorker.RunWorkerAsync();
+                    formUpdate();
+                }
+                else
+                {
+                    formConsole("Run stopped. Cleaning up...");
+                    run.Enabled = false;
+                    started = false;
+                    cleanup = true;
+                    formUpdate();
+                }
             }
-        }
-
-        private void accountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AccountForm account = new AccountForm(this);
-            account.StartPosition = FormStartPosition.CenterParent;
-            account.ShowDialog();
-        }
-
-        private void triggerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            TriggerForm trigger = new TriggerForm(this);
-            trigger.StartPosition = FormStartPosition.CenterParent;
-            trigger.ShowDialog();
-        }
-
-        private void responseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ResponseForm response = new ResponseForm(this);
-            response.StartPosition = FormStartPosition.CenterParent;
-            response.ShowDialog();
         }
 
         private void loginWorker_DoWork(object sender, DoWorkEventArgs e)
