@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace RedditBot
 {
+    // This class is responsible for scanning for the trigger, and if/when it is found, performing our response.
     class Scanner
     {
         private Main mainForm;
@@ -27,6 +28,7 @@ namespace RedditBot
             this.commentAfter = this.postAfter;
         }
 
+        // Run the scan on selected locations.
         public void scan()
         {
             if (searchTitles || searchPosts) { this.scanPosts(); }
@@ -34,6 +36,7 @@ namespace RedditBot
             if (searchMessages) { this.scanMessages(); }
         }
 
+        // Get last 25 posts using ApiRequest.
         private void scanPosts()
         {
             string url = "https://www.reddit.com/r/" + subreddit + "/search/.json?restrict_sr=true&limit=25&sort=new";
@@ -43,6 +46,7 @@ namespace RedditBot
             title = body = postAuthor = fullname = "";
             double postCreated = 0;
 
+            // Counts backwards so that results are output in order of creation.
             for (int i = 24; i >= 0; i--)
             {
                 try
@@ -53,8 +57,11 @@ namespace RedditBot
                     postCreated = postResults.data.children[i].data.created_utc;
                     fullname = postResults.data.children[i].data.name;
 
+                    // Only trigger if post was made after start of run/since the last post we responded to.
+                    // This way we don't respond twice to the same post.
                     if (postCreated > postAfter)
                     {
+                        // If trigger is in title (case insensitive), print it in console and perform our response
                         if (title.ToLower().Contains(this.trigger.ToLower()) && searchTitles)
                         {
                             if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
@@ -62,6 +69,7 @@ namespace RedditBot
                             mainForm.formConsole("Title: \'" + preview + "\' by /u/" + postAuthor);
                             this.respond(fullname, "Shindogo");
                         }
+                        // If trigger is in body (case insensitive), print it in console and perform our response
                         if (body.ToLower().Contains(this.trigger.ToLower()) && searchPosts)
                         {
                             if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
@@ -69,6 +77,7 @@ namespace RedditBot
                             mainForm.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
                             this.respond(fullname, postAuthor);
                         }
+                        // Set this as last responded to
                         postAfter = postCreated;
                     }
                 }
@@ -76,6 +85,7 @@ namespace RedditBot
             }
         }
 
+        // Get the last 25 comments using ApiRequest.
         private void scanComments()
         {
             string url = "https://www.reddit.com/r/" + this.subreddit + "/comments/.json";
@@ -85,6 +95,7 @@ namespace RedditBot
             comment = commentAuthor = fullname = "";
             double commentCreated = 0;
 
+            // Counts backwards so that results are output in order of creation.
             for (int i = 24; i >= 0; i--)
             {
                 try
@@ -93,8 +104,12 @@ namespace RedditBot
                     commentAuthor = commentResults.data.children[i].data.author;
                     commentCreated = commentResults.data.children[i].data.created_utc;
                     fullname = commentResults.data.children[i].data.name;
+
+                    // Only trigger if comment was made after start of run/since the last comment we responded to.
+                    // This way we don't respond twice to the same comment.
                     if (commentCreated > commentAfter)
                     {
+                        // If trigger is in comment (case insensitive), print it in console and perform our response
                         if (comment.ToLower().Contains(this.trigger.ToLower()))
                         {
                             if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
@@ -102,6 +117,7 @@ namespace RedditBot
                             mainForm.formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
                             this.respond(fullname, commentAuthor);
                         }
+                        // Set this as last responded to
                         commentAfter = commentCreated;
                     }
                 }
@@ -109,6 +125,7 @@ namespace RedditBot
             }
         }
 
+        // Get all unread messages using ApiRequest.
         private void scanMessages()
         {
             string url = "https://oauth.reddit.com/message/unread";
@@ -118,6 +135,7 @@ namespace RedditBot
             bool wasComment;
             message = sender = fullname = "";
 
+            // Counts backwards so that results are output in order of creation.
             for (int i = 24; i >= 0; i--)
             {
                 try
@@ -126,31 +144,38 @@ namespace RedditBot
                     sender = messageResults.data.children[i].data.author;
                     fullname = messageResults.data.children[i].data.name;
                     wasComment = messageResults.data.children[i].data.was_comment;
+
+                    // Don't reply to messages from reddit alerting us to comments.
                     if (!wasComment)
                     {
+                        // If trigger is in message (case insensitive), print it in console and perform our response
                         if (message.ToLower().Contains(this.trigger.ToLower()))
                         {
                             if (message.Length > 25) { preview = message.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = message.Replace("\n", " "); }
                             mainForm.formConsole("Message: \'" + preview + "\' by /u/" + sender);
                             this.respond(fullname, sender);
-                            url = "https://oauth.reddit.com/api/read_message";
-                            Hashtable args = new Hashtable();
-                            args.Add("id", fullname);
-                            ApiRequest markAsRead = new ApiRequest(user, url, "POST", args);
                         }
+                        // Then mark the message as read using ApiRequest so we don't see it again.
+                        url = "https://oauth.reddit.com/api/read_message";
+                        Hashtable args = new Hashtable();
+                        args.Add("id", fullname);
+                        ApiRequest markAsRead = new ApiRequest(user, url, "POST", args);
                     }
                 }
                 catch (ArgumentOutOfRangeException) { }
             }
         }
 
+        // Handle sending our specified response.
         private void respond(String source, String recipient)
         {
+            // Get the action to take and the data to send, then append a signature to the data.
             string action = Properties.Settings.Default["action"].ToString();
             string content = Properties.Settings.Default["content"].ToString();
             content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^by ^/u/Shindogo ^- ^Like ^me? ^Want ^your ^own? [^Get ^one ^here!](https://github.com/JMdeKlerk/RedditBot)";
 
+            // If action is alert, send nothing, just flash and beep.
             if (action.Equals("Alert"))
             {
                 mainForm.Invoke((MethodInvoker)delegate
@@ -160,6 +185,7 @@ namespace RedditBot
                     SystemSounds.Beep.Play();
                 });
             }
+            // Otherwise, create a comment or private message using ApiRequest.
             if (action.Equals("Reply"))
             {
                 string url = "https://oauth.reddit.com/api/comment";

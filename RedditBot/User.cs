@@ -3,12 +3,15 @@ using System.Collections;
 
 namespace RedditBot
 {
+    // This class represents the currently logged in user, and holds their login details as well as the access token and
+    //  private information retrieved from the server.
     class User
     {
         private string username, password, key, secret, access_token, messages, error = "";
         private int lkarma, ckarma;
         private DateTime token_expires;
 
+        // Construct the object and attempt a login.
         public User(string name, string pass, string key, string secret, Main parent)
         {
             this.username = name;
@@ -18,6 +21,7 @@ namespace RedditBot
 
             loginUser(name, pass, key, secret);
 
+            // If everything checks out, fetch a basic profile.
             if (!String.IsNullOrEmpty(this.access_token))
             {
                 parent.formConsole("Logged in successfully.");
@@ -27,6 +31,7 @@ namespace RedditBot
                 this.ckarma = userinfo.comment_karma;
                 this.messages = userinfo.has_mail;
             }
+            // Otherwise, tell them why we failed.
             else
             {
                 if (error.Equals("invalid_grant")) { error = "Username or password incorrect."; }
@@ -35,6 +40,7 @@ namespace RedditBot
             }
         }
 
+        // Login method. Uses ApiRequest class.
         private void loginUser(string name, string pass, string key, string secret)
         {
             string url = "https://www.reddit.com/api/v1/access_token";
@@ -47,17 +53,21 @@ namespace RedditBot
             auth = Convert.ToBase64String(authBin);
             auth = "Basic " + auth;
             ApiRequest request = new ApiRequest(url, "POST", auth, args);
-            dynamic response = request.getResponse(); this.access_token = response.access_token;
+            dynamic response = request.getResponse(); 
+            this.access_token = response.access_token;
             this.token_expires = DateTime.Now.AddSeconds(Convert.ToInt32(response.expires_in));
             this.error = response.error;
         }
 
+        // Access tokens only last for one hour, so each time we try to use it, check if it is still valid.
+        // If not, get a new one.
         public string getToken()
         {
             if (this.tokenHasExpired()) { loginUser(username, password, key, secret); }
             return this.access_token;
         }
 
+        // Getters.
         public string getUsername()
         {
             return this.username;

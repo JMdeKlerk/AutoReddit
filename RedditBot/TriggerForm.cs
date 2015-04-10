@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace RedditBot
 {
+    // Form for entering trigger settings.
     public partial class TriggerForm : Form
     {
         private Main parent;
@@ -11,6 +12,7 @@ namespace RedditBot
         {
             InitializeComponent();
             this.parent = parent;
+            // If we have saved settings, put them in our boxes.
             searchTextBox.Text = Properties.Settings.Default["trigger"].ToString();
             subredditTextBox.Text = Properties.Settings.Default["subreddit"].ToString();
             titleSearch.Checked = (bool)Properties.Settings.Default["searchTitles"];
@@ -19,6 +21,7 @@ namespace RedditBot
             messageSearch.Checked = (bool)Properties.Settings.Default["searchMessages"];
         }
 
+        // On confirm, save settings and close the form.
         private void confirmButton_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default["trigger"] = searchTextBox.Text;
@@ -32,6 +35,7 @@ namespace RedditBot
             this.Close();
         }
 
+        // On cancel, just close.
         private void cancelButton_Click(object sender, EventArgs e)
         {
             parent.formConsole("Trigger settings not saved.");

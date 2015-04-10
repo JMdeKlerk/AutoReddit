@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace RedditBot
 {
+    // This class taken from http://pietschsoft.com/post/2009/01/26/CSharp-Flash-Window-in-Taskbar-via-Win32-FlashWindowEx
     public static class FlashWindow
     {
         [DllImport("user32.dll")]

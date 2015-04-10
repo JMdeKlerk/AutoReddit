@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace RedditBot
 {
+    // Form for entering account details.
     public partial class AccountForm : Form
     {
         private Main parent = null;
@@ -11,12 +12,14 @@ namespace RedditBot
         {
             InitializeComponent();
             this.parent = parent;
+            // If we have saved details, put them in our boxes.
             userTextBox.Text = Properties.Settings.Default["username"].ToString();
             passTextBox.Text = Properties.Settings.Default["password"].ToString();
             keyTextBox.Text = Properties.Settings.Default["appkey"].ToString();
             secretTextBox.Text = Properties.Settings.Default["appsecret"].ToString();
         }
 
+        // On confirm, save our new information and close the form.
         private void confirmButton_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default["username"] = userTextBox.Text;
@@ -29,6 +32,7 @@ namespace RedditBot
             this.Close();
         }
 
+        // On cancel, just close.
         private void cancelButton_Click(object sender, EventArgs e)
         {
             parent.formConsole("Account settings not saved.");
