@@ -26,22 +26,42 @@ namespace RedditBot
 
         private void triggerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TriggerForm trigger = new TriggerForm(this);
-            trigger.StartPosition = FormStartPosition.CenterParent;
-            trigger.ShowDialog();
+            string mode = Properties.Settings.Default["mode"].ToString();
+            if (mode.Equals("simple"))
+            {
+                TriggerForm trigger = new TriggerForm(this);
+                trigger.StartPosition = FormStartPosition.CenterParent;
+                trigger.ShowDialog();
+            }
+            else
+            {
+                AdvancedForm trigger = new AdvancedForm(this);
+                trigger.StartPosition = FormStartPosition.CenterParent;
+                trigger.ShowDialog();
+            }
         }
 
         private void responseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResponseForm response = new ResponseForm(this);
-            response.StartPosition = FormStartPosition.CenterParent;
-            response.ShowDialog();
+            string mode = Properties.Settings.Default["mode"].ToString();
+            if (mode.Equals("simple"))
+            {
+                ResponseForm response = new ResponseForm(this);
+                response.StartPosition = FormStartPosition.CenterParent;
+                response.ShowDialog();
+            }
+            else
+            {
+                AdvancedForm trigger = new AdvancedForm(this);
+                trigger.StartPosition = FormStartPosition.CenterParent;
+                trigger.ShowDialog();
+            }
         }
 
         // Login button event handler.
         private void login_Click(object sender, EventArgs e)
         {
-            // If we aren't already logged in, attempt to log in witht the given credentials (via a background worker to prevent locking up).
+            // If we aren't already logged in, attempt to log in with the given credentials (via a background worker to prevent locking up).
             if (!connected)
             {
                 formConsole("Logging in as user " + Properties.Settings.Default["username"].ToString() + "...");
@@ -163,6 +183,7 @@ namespace RedditBot
         // This method checks all our state variables and enables, disables, or changes text on controls accordingly.
         private void formUpdate()
         {
+            // Make it thread-safe.
             this.Invoke((MethodInvoker)delegate
             {
                 username.Text = Properties.Settings.Default["username"].ToString();

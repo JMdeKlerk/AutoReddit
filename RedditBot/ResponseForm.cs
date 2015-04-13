@@ -45,7 +45,14 @@ namespace RedditBot
 
         private void advanced_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Currently in development.");
+            Properties.Settings.Default["mode"] = "advanced";
+            Properties.Settings.Default.Save();
+            parent.formConsole("Switched to advanced mode.");
+            this.Hide();
+            AdvancedForm trigger = new AdvancedForm(parent);
+            trigger.StartPosition = FormStartPosition.CenterParent;
+            trigger.ShowDialog(parent);
+            this.Close();
         }
 
         // Enable/disable content box based on selected action.
