@@ -11,13 +11,14 @@ namespace RedditBot
         private Main mainForm;
         private User user;
         private double postAfter, commentAfter;
-        private bool searchTitles, searchPosts, searchComments, searchMessages;
+        private bool advanced, searchTitles, searchPosts, searchComments, searchMessages;
         private string trigger, subreddit, preview;
 
-        public Scanner(Main form, User user, string trigger, string subreddit, bool titles, bool posts, bool comments, bool messages)
+        public Scanner(Main form, User user, string mode, string trigger, string subreddit, bool titles, bool posts, bool comments, bool messages)
         {
             this.mainForm = form;
             this.user = user;
+            if (mode.Equals("advanced")) { this.advanced = true; } else { this.advanced = false; }
             this.trigger = trigger;
             this.subreddit = subreddit;
             this.searchTitles = titles;
@@ -62,7 +63,7 @@ namespace RedditBot
                     if (postCreated > postAfter)
                     {
                         // If trigger is in title (case insensitive), print it in console and perform our response
-                        if (title.ToLower().Contains(this.trigger.ToLower()) && searchTitles)
+                        if (title.ToLower().Contains(this.trigger.ToLower()) && searchTitles && !advanced)
                         {
                             if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = title.Replace("\n", " "); }
@@ -70,7 +71,7 @@ namespace RedditBot
                             this.respond(fullname, "Shindogo");
                         }
                         // If trigger is in body (case insensitive), print it in console and perform our response
-                        if (body.ToLower().Contains(this.trigger.ToLower()) && searchPosts)
+                        if (body.ToLower().Contains(this.trigger.ToLower()) && searchPosts && !advanced)
                         {
                             if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = body.Replace("\n", " "); }
@@ -110,7 +111,7 @@ namespace RedditBot
                     if (commentCreated > commentAfter)
                     {
                         // If trigger is in comment (case insensitive), print it in console and perform our response
-                        if (comment.ToLower().Contains(this.trigger.ToLower()))
+                        if (comment.ToLower().Contains(this.trigger.ToLower()) && !advanced)
                         {
                             if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = comment.Replace("\n", " "); }
@@ -149,7 +150,7 @@ namespace RedditBot
                     if (!wasComment)
                     {
                         // If trigger is in message (case insensitive), print it in console and perform our response
-                        if (message.ToLower().Contains(this.trigger.ToLower()))
+                        if (message.ToLower().Contains(this.trigger.ToLower()) && !advanced)
                         {
                             if (message.Length > 25) { preview = message.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = message.Replace("\n", " "); }

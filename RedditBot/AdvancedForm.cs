@@ -12,6 +12,7 @@ namespace RedditBot
         {
             InitializeComponent();
             this.parent = parent;
+            subredditTextBox.Text = Properties.Settings.Default["subreddit"].ToString();
         }
 
         private void AdvancedForm_Load(object sender, EventArgs e)
@@ -33,6 +34,8 @@ namespace RedditBot
         private void confirmButton_Click(object sender, EventArgs e)
         {
             scriptTextBox.SaveFile("script.py", RichTextBoxStreamType.PlainText);
+            Properties.Settings.Default["subreddit"] = subredditTextBox.Text;
+            Properties.Settings.Default.Save();
             parent.formConsole("Script saved.");
             this.Close();
         }
@@ -41,6 +44,25 @@ namespace RedditBot
         {
             parent.formConsole("Script not saved.");
             this.Close();
+        }
+
+        private void help_Click(object sender, EventArgs e)
+        {
+            string help = String.Join(Environment.NewLine + Environment.NewLine,
+                "You can use this editor to create a python script that will run on each search result and determine your response.",
+                "Input: The script will be given arguments containing the type of result (title, post, comment or message), the username of the author, and the full text of the result.",
+                "Output: The script should print one of 'alert', 'reply' or 'message' followed by the contents of the response.",
+                "An example script has been given for you to start.");
+            string script = String.Join(Environment.NewLine,
+                "import sys\n",
+                "type = str(sys.argv[1])",
+                "author = str(sys.argv[2])",
+                "text = str(sys.argv[3:])\n", 
+                "if (type == \"title\" and author == \"Shindogo\"):",
+                "\tif (\"I need a bot!\" in text):",
+                "\t\tprint(\"reply Hello World!\")");
+            scriptTextBox.Text = script;
+            MessageBox.Show(help);
         }
     }
 }

@@ -96,6 +96,7 @@ namespace RedditBot
             bool searchMessages = (bool)Properties.Settings.Default["searchMessages"];
             string trigger = Properties.Settings.Default["trigger"].ToString();
             string subreddit = Properties.Settings.Default["subreddit"].ToString();
+            string mode = Properties.Settings.Default["mode"].ToString();
 
             // If any required fields aren't set, abort.
             if (!searchTitles && !searchPosts && !searchComments && !searchMessages) { formConsole("Run failed: You must select search locations."); }
@@ -106,17 +107,21 @@ namespace RedditBot
                 // If we aren't scanning already, begin.
                 if (!started)
                 {
-                    // Build a string for human-readable console output.
-                    string searchin = " (";
-                    if (searchTitles) { searchin += "titles, "; }
-                    if (searchPosts) { searchin += "posts, "; }
-                    if (searchComments) { searchin += "comments, "; }
-                    if (searchMessages) { searchin += "messages, "; }
-                    searchin = searchin.Remove(searchin.Length - 2);
-                    searchin += ")";
-                    searchin = "/r/" + subreddit + searchin;
-                    if (!searchComments && !searchPosts && !searchTitles) { searchin = "private messages"; }
-                    formConsole("Run started. Searching for \'" + trigger + "\' in " + searchin);
+                    if (mode == "simple")
+                    {
+                        // Build a string for human-readable console output.
+                        string searchin = " (";
+                        if (searchTitles) { searchin += "titles, "; }
+                        if (searchPosts) { searchin += "posts, "; }
+                        if (searchComments) { searchin += "comments, "; }
+                        if (searchMessages) { searchin += "messages, "; }
+                        searchin = searchin.Remove(searchin.Length - 2);
+                        searchin += ")";
+                        searchin = "/r/" + subreddit + searchin;
+                        if (!searchComments && !searchPosts && !searchTitles) { searchin = "private messages"; }
+                        formConsole("Run started. Searching for \'" + trigger + "\' in " + searchin);
+                    }
+                    else { formConsole("Running custom script on titles, posts, comments and messages"); }
                     // Begin run (in a background worker).
                     started = true;
                     scanWorker.RunWorkerAsync();
@@ -150,12 +155,13 @@ namespace RedditBot
         {
             string trigger = Properties.Settings.Default["trigger"].ToString();
             string subreddit = Properties.Settings.Default["subreddit"].ToString();
+            string mode = Properties.Settings.Default["mode"].ToString();
             bool searchTitles = (bool)Properties.Settings.Default["searchTitles"];
             bool searchPosts = (bool)Properties.Settings.Default["searchPosts"];
             bool searchComments = (bool)Properties.Settings.Default["searchComments"];
             bool searchMessages = (bool)Properties.Settings.Default["searchMessages"];
 
-            Scanner scanner = new Scanner(this, user, trigger, subreddit, searchTitles, searchPosts, searchComments, searchMessages);
+            Scanner scanner = new Scanner(this, user, mode, trigger, subreddit, searchTitles, searchPosts, searchComments, searchMessages);
             while (started)
             {
                 scanner.scan();
