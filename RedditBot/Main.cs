@@ -121,7 +121,7 @@ namespace RedditBot
                         if (!searchComments && !searchPosts && !searchTitles) { searchin = "private messages"; }
                         formConsole("Run started. Searching for \'" + trigger + "\' in " + searchin);
                     }
-                    else { formConsole("Running custom script on titles, posts, comments and messages"); }
+                    else { formConsole("Running custom script on /r/" + subreddit + " titles, posts, comments and messages"); }
                     // Begin run (in a background worker).
                     started = true;
                     scanWorker.RunWorkerAsync();

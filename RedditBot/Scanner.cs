@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
+using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -18,7 +20,8 @@ namespace RedditBot
         {
             this.mainForm = form;
             this.user = user;
-            if (mode.Equals("advanced")) { this.advanced = true; } else { this.advanced = false; }
+            if (mode.Equals("advanced")) { this.advanced = true; }
+            else { this.advanced = false; }
             this.trigger = trigger;
             this.subreddit = subreddit;
             this.searchTitles = titles;
@@ -41,6 +44,8 @@ namespace RedditBot
         private void scanPosts()
         {
             string url = "https://www.reddit.com/r/" + subreddit + "/search/.json?restrict_sr=true&limit=25&sort=new";
+            string action = Properties.Settings.Default["action"].ToString();
+            string content = Properties.Settings.Default["content"].ToString();
             ApiRequest requestPosts = new ApiRequest(url, "GET");
             dynamic postResults = requestPosts.getResponse();
             string title, body, postAuthor, fullname;
@@ -68,7 +73,7 @@ namespace RedditBot
                             if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = title.Replace("\n", " "); }
                             mainForm.formConsole("Title: \'" + preview + "\' by /u/" + postAuthor);
-                            this.respond(fullname, "Shindogo");
+                            this.respond(action, content, fullname, postAuthor);
                         }
                         // If trigger is in body (case insensitive), print it in console and perform our response
                         if (body.ToLower().Contains(this.trigger.ToLower()) && searchPosts && !advanced)
@@ -76,7 +81,34 @@ namespace RedditBot
                             if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = body.Replace("\n", " "); }
                             mainForm.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
-                            this.respond(fullname, postAuthor);
+                            this.respond(action, content, fullname, postAuthor);
+                        }
+                        if (advanced)
+                        {
+                            string pyTitle = pyRun("title " + postAuthor + " " + title).Replace("\r\n", "");
+                            string pyBody = pyRun("body " + postAuthor + " " + body).Replace("\r\n", "");
+                            if (!String.IsNullOrEmpty(pyTitle))
+                            {
+                                if (title.Length > 25) { preview = title.Remove(24).Replace("\n", " ") + "..."; }
+                                else { preview = title.Replace("\n", " "); }
+                                mainForm.formConsole("Title: \'" + preview + "\' by /u/" + postAuthor);
+                                if (pyTitle.Contains(" ")) { action = pyTitle.Substring(0, pyTitle.IndexOf(" ")); }
+                                else { action = pyTitle; }
+                                if (pyTitle.Contains(" ")) { content = pyTitle.Substring(pyTitle.IndexOf(" ")); }
+                                else { content = ""; }
+                                this.respond(action, content, fullname, postAuthor);
+                            }
+                            if (!String.IsNullOrEmpty(pyBody))
+                            {
+                                if (body.Length > 25) { preview = body.Remove(24).Replace("\n", " ") + "..."; }
+                                else { preview = body.Replace("\n", " "); }
+                                mainForm.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
+                                if (pyBody.Contains(" ")) { action = pyBody.Substring(0, pyBody.IndexOf(" ")); }
+                                else { action = pyBody; }
+                                if (pyTitle.Contains(" ")) { content = pyTitle.Substring(pyTitle.IndexOf(" ")); }
+                                else { content = ""; }
+                                this.respond(action, content, fullname, postAuthor);
+                            }
                         }
                         // Set this as last responded to
                         postAfter = postCreated;
@@ -90,6 +122,8 @@ namespace RedditBot
         private void scanComments()
         {
             string url = "https://www.reddit.com/r/" + this.subreddit + "/comments/.json";
+            string action = Properties.Settings.Default["action"].ToString();
+            string content = Properties.Settings.Default["content"].ToString();
             ApiRequest requestComments = new ApiRequest(url, "GET");
             dynamic commentResults = requestComments.getResponse();
             string comment, commentAuthor, fullname;
@@ -116,7 +150,22 @@ namespace RedditBot
                             if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = comment.Replace("\n", " "); }
                             mainForm.formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
-                            this.respond(fullname, commentAuthor);
+                            this.respond(action, content, fullname, commentAuthor);
+                        }
+                        if (advanced)
+                        {
+                            string pyComment = pyRun("comment " + commentAuthor + " " + comment).Replace("\r\n", "");
+                            if (!String.IsNullOrEmpty(pyComment))
+                            {
+                                if (comment.Length > 25) { preview = comment.Remove(24).Replace("\n", " ") + "..."; }
+                                else { preview = comment.Replace("\n", " "); }
+                                mainForm.formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
+                                if (pyComment.Contains(" ")) { action = pyComment.Substring(0, pyComment.IndexOf(" ")); }
+                                else { action = pyComment; }
+                                if (pyComment.Contains(" ")) { content = pyComment.Substring(pyComment.IndexOf(" ")); }
+                                else { content = ""; }
+                                this.respond(action, content, fullname, commentAuthor);
+                            }
                         }
                         // Set this as last responded to
                         commentAfter = commentCreated;
@@ -130,6 +179,8 @@ namespace RedditBot
         private void scanMessages()
         {
             string url = "https://oauth.reddit.com/message/unread";
+            string action = Properties.Settings.Default["action"].ToString();
+            string content = Properties.Settings.Default["content"].ToString();
             ApiRequest requestMessages = new ApiRequest(user, url, "GET");
             dynamic messageResults = requestMessages.getResponse();
             string message, sender, fullname;
@@ -155,7 +206,22 @@ namespace RedditBot
                             if (message.Length > 25) { preview = message.Remove(24).Replace("\n", " ") + "..."; }
                             else { preview = message.Replace("\n", " "); }
                             mainForm.formConsole("Message: \'" + preview + "\' by /u/" + sender);
-                            this.respond(fullname, sender);
+                            this.respond(action, content, fullname, sender);
+                        }
+                        if (advanced)
+                        {
+                            string pyMessage = pyRun("title " + sender + " " + message).Replace("\r\n", "");
+                            if (!String.IsNullOrEmpty(pyMessage))
+                            {
+                                if (message.Length > 25) { preview = message.Remove(24).Replace("\n", " ") + "..."; }
+                                else { preview = message.Replace("\n", " "); }
+                                mainForm.formConsole("Message: \'" + preview + "\' by /u/" + sender);
+                                if (pyMessage.Contains(" ")) { action = pyMessage.Substring(0, pyMessage.IndexOf(" ")); }
+                                else { action = pyMessage; }
+                                if (pyMessage.Contains(" ")) { content = pyMessage.Substring(pyMessage.IndexOf(" ")); }
+                                else { content = ""; }
+                                this.respond(action, content, fullname, sender);
+                            }
                         }
                         // Then mark the message as read using ApiRequest so we don't see it again.
                         url = "https://oauth.reddit.com/api/read_message";
@@ -169,15 +235,12 @@ namespace RedditBot
         }
 
         // Handle sending our specified response.
-        private void respond(String source, String recipient)
+        private void respond(String action, String content, String source, String recipient)
         {
-            // Get the action to take and the data to send, then append a signature to the data.
-            string action = Properties.Settings.Default["action"].ToString();
-            string content = Properties.Settings.Default["content"].ToString();
-            content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^by ^/u/Shindogo ^- ^Like ^me? ^Want ^your ^own? [^Get ^one ^here!](https://github.com/JMdeKlerk/RedditBot)";
+            content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^\\(but ^not ^owned) ^by ^/u/Shindogo ^- [^Feedback?](http://www.reddit.com/message/compose/?to=" + Properties.Settings.Default["username"].ToString() + ") [^Want ^your ^own?](https://github.com/JMdeKlerk/RedditBot)";
 
             // If action is alert, send nothing, just flash and beep.
-            if (action.Equals("Alert"))
+            if (action.ToLower().Equals("alert"))
             {
                 mainForm.Invoke((MethodInvoker)delegate
                 {
@@ -187,7 +250,7 @@ namespace RedditBot
                 });
             }
             // Otherwise, create a comment or private message using ApiRequest.
-            if (action.Equals("Reply"))
+            if (action.ToLower().Equals("reply"))
             {
                 string url = "https://oauth.reddit.com/api/comment";
                 Hashtable args = new Hashtable();
@@ -196,7 +259,7 @@ namespace RedditBot
                 ApiRequest request = new ApiRequest(user, url, "POST", args);
                 request.getResponse();
             }
-            if (action.Equals("Message"))
+            if (action.ToLower().Equals("message"))
             {
                 string url = "https://oauth.reddit.com/api/compose";
                 Hashtable args = new Hashtable();
@@ -204,6 +267,24 @@ namespace RedditBot
                 args.Add("text", content);
                 args.Add("to", recipient);
                 ApiRequest request = new ApiRequest(user, url, "POST", args);
+            }
+        }
+
+        private string pyRun(string args)
+        {
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = "python.exe";
+            start.Arguments = "script.py " + args;
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            start.CreateNoWindow = true;
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    return result;
+                }
             }
         }
     }
