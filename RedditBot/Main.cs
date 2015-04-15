@@ -99,9 +99,9 @@ namespace RedditBot
             string mode = Properties.Settings.Default["mode"].ToString();
 
             // If any required fields aren't set, abort.
-            if (!searchTitles && !searchPosts && !searchComments && !searchMessages) { formConsole("Run failed: You must select search locations."); }
-            else if (String.IsNullOrEmpty(trigger)) { formConsole("Run failed: Select a trigger to search for."); }
-            else if (String.IsNullOrEmpty(subreddit) && (searchTitles || searchPosts || searchComments)) { formConsole("Run failed: Select a subreddit to search in."); }
+            if (!searchTitles && !searchPosts && !searchComments && !searchMessages && !mode.Equals("advanced")) { formConsole("Run failed: You must select search locations."); }
+            else if (String.IsNullOrEmpty(trigger) && !mode.Equals("advanced")) { formConsole("Run failed: Select a trigger to search for."); }
+            else if (String.IsNullOrEmpty(subreddit) && (searchTitles || searchPosts || searchComments || mode.Equals("advanced"))) { formConsole("Run failed: Select a subreddit to search in."); }
             else
             {
                 // If we aren't scanning already, begin.
