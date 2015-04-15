@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace RedditBot
 {
+    // Form for advanced input.
     public partial class AdvancedForm : Form
     {
         private Main parent;
@@ -15,6 +16,7 @@ namespace RedditBot
             subredditTextBox.Text = Properties.Settings.Default["subreddit"].ToString();
         }
 
+        // If there is already a script, load it into the textbox.
         private void AdvancedForm_Load(object sender, EventArgs e)
         {
             if (File.Exists("script.py"))
@@ -23,6 +25,7 @@ namespace RedditBot
             }
         }
 
+        // Switch to simple mode.
         private void simple_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default["mode"] = "simple";
@@ -31,6 +34,7 @@ namespace RedditBot
             this.Close();
         }
 
+        // On confirm save script to disk and close.
         private void confirmButton_Click(object sender, EventArgs e)
         {
             scriptTextBox.SaveFile("script.py", RichTextBoxStreamType.PlainText);
@@ -40,12 +44,14 @@ namespace RedditBot
             this.Close();
         }
 
+        // On cancel, just close.
         private void cancelButton_Click(object sender, EventArgs e)
         {
             parent.formConsole("Script not saved.");
             this.Close();
         }
 
+        // Show a help window and give the user a starter script.
         private void help_Click(object sender, EventArgs e)
         {
             string help = String.Join(Environment.NewLine + Environment.NewLine,

@@ -43,6 +43,7 @@ namespace RedditBot
             this.Close();
         }
 
+        // Switch to advanced mode.
         private void advanced_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default["mode"] = "advanced";

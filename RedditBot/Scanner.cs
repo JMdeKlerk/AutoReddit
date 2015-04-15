@@ -83,6 +83,7 @@ namespace RedditBot
                             mainForm.formConsole("Body: \'" + preview + "\' by /u/" + postAuthor);
                             this.respond(action, content, fullname, postAuthor);
                         }
+                        // If advanced mode, run user's script and pass non-null results to response method.
                         if (advanced)
                         {
                             string pyTitle = pyRun("title " + postAuthor + " " + title).Replace("\r\n", "");
@@ -114,6 +115,7 @@ namespace RedditBot
                         postAfter = postCreated;
                     }
                 }
+                // Program throws argument out of range if there are fewer than 25 results. Ignore it.
                 catch (ArgumentOutOfRangeException) { }
             }
         }
@@ -152,6 +154,7 @@ namespace RedditBot
                             mainForm.formConsole("Comment: \'" + preview + "\' by /u/" + commentAuthor);
                             this.respond(action, content, fullname, commentAuthor);
                         }
+                        // If advanced mode, run user's script and pass non-null results to response method.
                         if (advanced)
                         {
                             string pyComment = pyRun("comment " + commentAuthor + " " + comment).Replace("\r\n", "");
@@ -171,6 +174,7 @@ namespace RedditBot
                         commentAfter = commentCreated;
                     }
                 }
+                // Program throws argument out of range if there are fewer than 25 results. Ignore it.
                 catch (ArgumentOutOfRangeException) { }
             }
         }
@@ -208,6 +212,7 @@ namespace RedditBot
                             mainForm.formConsole("Message: \'" + preview + "\' by /u/" + sender);
                             this.respond(action, content, fullname, sender);
                         }
+                        // If advanced mode, run user's script and pass non-null results to response method.
                         if (advanced)
                         {
                             string pyMessage = pyRun("title " + sender + " " + message).Replace("\r\n", "");
@@ -230,6 +235,7 @@ namespace RedditBot
                         ApiRequest markAsRead = new ApiRequest(user, url, "POST", args);
                     }
                 }
+                // Program throws argument out of range if there are fewer than 25 results. Ignore it.
                 catch (ArgumentOutOfRangeException) { }
             }
         }
@@ -237,7 +243,7 @@ namespace RedditBot
         // Handle sending our specified response.
         private void respond(String action, String content, String source, String recipient)
         {
-            content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^\\(but ^not ^owned) ^by ^/u/Shindogo ^- [^Feedback?](http://www.reddit.com/message/compose/?to=" + Properties.Settings.Default["username"].ToString() + ") [^Want ^your ^own?](https://github.com/JMdeKlerk/RedditBot)";
+            content = content += "\n\n****\n\n^I ^am ^a ^bot, ^developed ^\\(but ^not ^owned) ^by ^/u/Shindogo ^- [^Feedback?](http://www.reddit.com/message/compose/?to=" + user.getUsername() + ") [^Want ^your ^own?](https://github.com/JMdeKlerk/RedditBot)";
 
             // If action is alert, send nothing, just flash and beep.
             if (action.ToLower().Equals("alert"))
@@ -270,6 +276,7 @@ namespace RedditBot
             }
         }
 
+        // Method for running python scripts. Uses a system console and returns whatever it outputs.
         private string pyRun(string args)
         {
             ProcessStartInfo start = new ProcessStartInfo();
