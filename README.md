@@ -1,6 +1,8 @@
 #RedditBot
 ##Usage:
 
+Download the standalone RedditBot.exe file from this repo
+
 Go to https://www.reddit.com/prefs/apps/
 
 Click the "create an app" button
